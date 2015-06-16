@@ -74,21 +74,29 @@ class CreateSchedule
 					'Boris', 'Franky', 'Vicente', 'Luis', 'Eadon', 'Boris',
 					'Kevin', 'Matte', 'Jay', 'James', 'Kevin', 'Sherry',
 					'Sherry', 'Jack', 'Sherry', 'Jack']
-		seeded = Hash.new
 		n = 0
-		month_range.each do |d|
-			puts d.wday
-			if d.wday == 6
-				seeded[:d] = "Weekend"
-				puts seeded[:d]
-			elsif d.wday == 0
-				seeded[:d] = "Weekend"
-				puts seeded[:d]
-			else
-				seeded[:d] = hero_order[n]
-				puts seeded[:d]
-				n += 1
+		month_range.each do |d, name, order|
+			order = n + 1
+			Heros.update( name: hero_order[n], order: order, schedule_date: d )
+			n += 1
 		end
+
+		# seeded = Hash.new
+		# n = 0
+		# month_range.each do |d|
+		# 	puts d.wday
+		# 	if d.wday == 6
+		# 		seeded[:d] = "Weekend"
+		# 		puts seeded[:d]
+		# 	elsif d.wday == 0
+		# 		seeded[:d] = "Weekend"
+		# 		puts seeded[:d]
+		# 	else
+		# 		seeded[:d] = hero_order[n]
+		# 		puts seeded[:d]
+		# 		n += 1
+		# end
+
 	end
 end
 
@@ -98,5 +106,5 @@ end
 # class UpdateSchedule
 # 	def update_month(month)
 # 	end
-end
+
 
