@@ -77,8 +77,11 @@ class CreateSchedule
 		n = 0
 		month_range.each do |d, name, order|
 			order = n + 1
-			Heros.update( name: hero_order[n], order: order, schedule_date: d )
-			n += 1
+			if d.way == 6 or d.way == 0
+				next
+			else
+				Heros.update( name: hero_order[n], order: order, schedule_date: d )
+				n += 1
 		end
 
 		# seeded = Hash.new
