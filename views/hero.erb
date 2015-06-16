@@ -1,0 +1,17 @@
+<h1>Roster</h1><br/>
+<form action='switch' method='post'>
+<ul>
+<% @heros.each do |hero| %>
+ <li>
+   <h4><a href="/<%= hero.id %>">Name: <%= hero.name %></a></h4>
+   <p>Order: <%= hero.order %></p>
+   <p>
+   	<label class='checkbox'>
+		<input type='checkbox' name='id[]' value='<%= hero.id %>' id='<%= hero.id %>' />Scheduled: <%= hero.schedule_date.strftime('%A, %d %B %Y')  %>
+	</label>
+    </p>
+ </li>
+<% end %>
+</ul><br/>
+<button type='submit' class='btn btn-primary'>Switch Dates</button>
+</form>
