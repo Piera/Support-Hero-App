@@ -2,9 +2,9 @@
 
 <table id='calendar'>
  <tr>
-   <th>Sunday</th><th>Monday</th>
-   <th>Tuesday</th><th>Wednesday</th>
-   <th>Thursday</th><th>Friday</th>
+   <th>Sunday</th> <th>Monday</th>
+   <th>Tuesday</th> <th>Wednesday</th>
+   <th>Thursday</th> <th>Friday</th>
    <th>Saturday</th>
   </tr>
   <tr>
@@ -21,7 +21,7 @@
 </table>
 <br>
 
-<% (@seed).each do |day,hero| %>
-   Day: <%= day %>   Hero: <%= hero %> <br/>
+<% @heros.each do |hero| %>
+   Day: <%= hero.schedule_date %>   Hero: <%= hero.name %> <br/>
 <% end %>
 

@@ -17,9 +17,10 @@ end
 #schedule view
 get '/' do 
 	@heros = Heros.order('schedule_date ASC')
+	# @heros = Heros
 	@month = CreateSchedule.new.month(2015,6,1)
 	@month_range = CreateSchedule.new.month_range(2015,6,1)
-	@seed = CreateSchedule.new.seed_calendar(@month_range)
+	@seed_calendar = CreateSchedule.new.seed_calendar(@month_range)
 	erb :index
 end
 
@@ -76,11 +77,19 @@ class CreateSchedule
 					'Sherry', 'Jack', 'Sherry', 'Jack']
 		n = 0
 		month_range.each do |d, name, order|
-			order = n + 1
-			if d.way == 6 or d.way == 0
+			if d.wday == 6 or d.wday == 0
+				puts "Weekend!"
 				next
 			else
-				Heros.update( name: hero_order[n], order: order, schedule_date: d )
+
+				order = n + 1
+				# hero = Heros.new
+				# hero.name = hero_order[n]
+				# puts hero.name
+				# hero.order = order
+				# hero.schedule_date = d
+				Heros.create( name:  hero_order[n], order: order, schedule_date: d )
+				puts Heros.name
 				n += 1
 		end
 
@@ -108,6 +117,6 @@ end
 # Update a schedule
 # class UpdateSchedule
 # 	def update_month(month)
-# 	end
+end
 
 
