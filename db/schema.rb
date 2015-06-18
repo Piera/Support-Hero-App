@@ -11,10 +11,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150517230549) do
+ActiveRecord::Schema.define(version: 20150618211514) do
 
   create_table "heroes", force: :cascade do |t|
     t.string "name"
   end
+
+  create_table "starting_orders", force: :cascade do |t|
+    t.integer "hero_id"
+    t.integer "order"
+    t.integer "heroes_id"
+  end
+
+  add_index "starting_orders", ["hero_id"], name: "index_starting_orders_on_hero_id"
 
 end

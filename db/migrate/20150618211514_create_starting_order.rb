@@ -1,4 +1,4 @@
-class CreateStarting_order < ActiveRecord::Migration
+class CreateStartingOrder < ActiveRecord::Migration
  def self.up
    create_table :starting_orders do |t|
    	 t.belongs_to :hero, index: true

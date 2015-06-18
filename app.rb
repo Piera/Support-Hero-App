@@ -13,7 +13,7 @@ class Hero < ActiveRecord::Base
  	validates :name, presence: true
 end
 
-class Starting_order < ActiveRecord::Base
+class StartingOrder < ActiveRecord::Base
 	belongs_to :hero
 	validates :order, presence: true
 	validates :heroes_id, presence: true
