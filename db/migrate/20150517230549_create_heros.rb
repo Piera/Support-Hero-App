@@ -1,13 +1,26 @@
-class CreateHeros < ActiveRecord::Migration
+class CreateHero < ActiveRecord::Migration
  def self.up
-   create_table :heros do |h|
-     h.string :name
-     h.datetime :schedule_date
-     h.integer :order
+   create_table :heroes do |t|
+     t.string :name
    end
  end
 
  def self.down
-   drop_table :heros
+   drop_table :heroes
  end
 end
+
+class CreateStarting_order < ActiveRecord::Migration
+ def self.up
+   create_table :starting_orders do |t|
+   	 t.belongs_to :hero, index: true
+     t.integer :order
+     t.integer :heroes_id
+   end
+ end
+
+ def self.down
+   drop_table :startingOrders
+ end
+end
+

@@ -8,15 +8,20 @@ require 'date'
 
 enable :sessions
 
-class Heros < ActiveRecord::Base
+class Hero < ActiveRecord::Base
+	has_many :starting_orders
  	validates :name, presence: true
- 	validates :order, presence: true
- 	validates :schedule_date, presence:true
+end
+
+class Starting_order < ActiveRecord::Base
+	belongs_to :hero
+	validates :order, presence: true
+	validates :heroes_id, presence: true
 end
 
 #schedule view
 get '/' do 
-	@heros = Heros.order('schedule_date ASC')
+	@heroes = Hero.order('schedule_date ASC')
 	@month = CreateSchedule.new.month(2015,6,1)
 	@month_range = CreateSchedule.new.month_range(2015,6,1)
 	@seed_calendar = CreateSchedule.new.seed_calendar(@month_range)
@@ -24,23 +29,23 @@ get '/' do
 end
 
 #roster view
-get '/heros' do
-	@heros = Heros.order('schedule_date ASC')
+get '/heroes' do
+	@heroes = Hero.order('schedule_date ASC')
 	erb :hero
 end
 
 #hero profile views
 get '/:id' do
- 	@hero = Heros.find(params[:id])
+ 	@hero = Hero.find(params[:id])
 	erb :profile
 end
 
 #switch two hero schedule_dates
 post '/switch' do
-	hero1 = Heros.find(params[:id][0])
-	hero2 = Heros.find(params[:id][1])
+	hero1 = Hero.find(params[:id][0])
+	hero2 = Hero.find(params[:id][1])
 	HeroSwitch.new.date_update(hero1, hero2)
-	redirect "/heros"
+	redirect "/heroes"
 end
 
 # --------------------------------------------
@@ -82,8 +87,8 @@ class CreateSchedule
 			else
 
 				order = n + 1
-				Heros.create( name:  hero_order[n], order: order, schedule_date: d )
-				puts Heros.name
+				Hero.create( name:  hero_order[n], order: order )
+				puts Hero.name
 				n += 1
 		end
 	end
@@ -91,5 +96,6 @@ end
 
 
 end
+
 
 

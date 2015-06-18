@@ -11,12 +11,6 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150517230549) do
-
-  create_table "heros", force: :cascade do |t|
-    t.string   "name"
-    t.datetime "schedule_date"
-    t.integer  "order"
-  end
+ActiveRecord::Schema.define(version: 0) do
 
 end
