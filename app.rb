@@ -9,13 +9,19 @@ require 'date'
 enable :sessions
 
 class Hero < ActiveRecord::Base
-	has_many :starting_orders
+	has_many :startingorders
  	validates :name, presence: true
 end
 
 class StartingOrder < ActiveRecord::Base
 	belongs_to :hero
 	validates :order, presence: true
+	validates :heroes_id, presence: true
+end
+
+class Calendar < ActiveRecord::Base
+	has_many :heroes
+	validates :date, presence: true
 	validates :heroes_id, presence: true
 end
 

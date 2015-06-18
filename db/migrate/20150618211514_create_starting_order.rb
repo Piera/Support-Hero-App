@@ -8,6 +8,6 @@ class CreateStartingOrder < ActiveRecord::Migration
  end
 
  def self.down
-   drop_table :startingOrders
+   drop_table :starting_orders
  end
 end
