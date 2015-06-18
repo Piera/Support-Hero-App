@@ -17,7 +17,6 @@ end
 #schedule view
 get '/' do 
 	@heros = Heros.order('schedule_date ASC')
-	# @heros = Heros
 	@month = CreateSchedule.new.month(2015,6,1)
 	@month_range = CreateSchedule.new.month_range(2015,6,1)
 	@seed_calendar = CreateSchedule.new.seed_calendar(@month_range)
@@ -83,40 +82,14 @@ class CreateSchedule
 			else
 
 				order = n + 1
-				# hero = Heros.new
-				# hero.name = hero_order[n]
-				# puts hero.name
-				# hero.order = order
-				# hero.schedule_date = d
 				Heros.create( name:  hero_order[n], order: order, schedule_date: d )
 				puts Heros.name
 				n += 1
 		end
-
-		# seeded = Hash.new
-		# n = 0
-		# month_range.each do |d|
-		# 	puts d.wday
-		# 	if d.wday == 6
-		# 		seeded[:d] = "Weekend"
-		# 		puts seeded[:d]
-		# 	elsif d.wday == 0
-		# 		seeded[:d] = "Weekend"
-		# 		puts seeded[:d]
-		# 	else
-		# 		seeded[:d] = hero_order[n]
-		# 		puts seeded[:d]
-		# 		n += 1
-		# end
-
 	end
 end
 
 
-
-# Update a schedule
-# class UpdateSchedule
-# 	def update_month(month)
 end
 
 
