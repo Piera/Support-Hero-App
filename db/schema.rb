@@ -23,11 +23,10 @@ ActiveRecord::Schema.define(version: 20150618215509) do
   end
 
   create_table "starting_orders", force: :cascade do |t|
-    t.integer "hero_id"
-    t.integer "order"
     t.integer "heroes_id"
+    t.integer "listorder"
   end
 
-  add_index "starting_orders", ["hero_id"], name: "index_starting_orders_on_hero_id"
+  add_index "starting_orders", ["heroes_id"], name: "index_starting_orders_on_heroes_id"
 
 end
