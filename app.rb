@@ -31,13 +31,12 @@ get '/' do
 	@heroes = Hero.order('id ASC')
 	@month = CreateSchedule.new.month(2015,6,1)
 	@month_range = CreateSchedule.new.month_range(2015,6,1)
-	# @seed_calendar = CreateSchedule.new.seed_calendar(@month_range)
 	erb :index
 end
 
 #roster view
 get '/heroes' do
-	# @heroes = Hero.order('schedule_date ASC')
+	@heroes = Hero.order('schedule_date ASC')
 	erb :hero
 end
 
