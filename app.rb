@@ -22,9 +22,17 @@ end
 
 class Calendar < ActiveRecord::Base
 	has_many :heroes
+	has_many :holidays
 	validates :date, presence: true
 	validates :heroes_id, presence: true
 end
+
+class Holiday < ActiveRecord::Base
+	belongs_to :calendars
+	validates :date, presence: true
+	validates :holidayName, presence: true
+end
+
 
 #schedule view
 get '/' do 
@@ -77,7 +85,3 @@ class CreateSchedule
 		month_range = (begin_date .. end_date)
 	end
 end
-
-
-
-

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150618215509) do
+ActiveRecord::Schema.define(version: 20150619195111) do
 
   create_table "calendars", force: :cascade do |t|
     t.datetime "date"
@@ -20,6 +20,11 @@ ActiveRecord::Schema.define(version: 20150618215509) do
 
   create_table "heroes", force: :cascade do |t|
     t.string "name"
+  end
+
+  create_table "holidays", force: :cascade do |t|
+    t.datetime "date"
+    t.string   "holidayName"
   end
 
   create_table "starting_orders", force: :cascade do |t|
