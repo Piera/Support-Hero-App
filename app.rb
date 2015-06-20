@@ -23,6 +23,7 @@ end
 class Calendar < ActiveRecord::Base
 	has_many :heroes
 	has_many :holidays
+	has_many :unavailables
 	validates :date, presence: true
 	validates :heroes_id, presence: true
 end
@@ -33,6 +34,12 @@ class Holiday < ActiveRecord::Base
 	validates :holidayName, presence: true
 end
 
+class Unavailable < ActiveRecord::Base
+	belongs_to :calendars
+	belongs_to :heroes
+	validates :date, presence: true
+	validates :heroes_id, presence: true
+end
 
 #schedule view
 get '/' do 

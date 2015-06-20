@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150619195111) do
+ActiveRecord::Schema.define(version: 20150620171543) do
 
   create_table "calendars", force: :cascade do |t|
     t.datetime "date"
@@ -33,5 +33,10 @@ ActiveRecord::Schema.define(version: 20150619195111) do
   end
 
   add_index "starting_orders", ["heroes_id"], name: "index_starting_orders_on_heroes_id"
+
+  create_table "unavailables", force: :cascade do |t|
+    t.datetime "date"
+    t.integer  "heroes_id"
+  end
 
 end

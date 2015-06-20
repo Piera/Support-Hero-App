@@ -34,7 +34,7 @@ n = 1
 support_heroes.each do |person|
 	next_hero = Hero.find_by name: person
 	puts next_hero.name
-	StartingOrder.create!( heroes_id: next_hero.id, listorder: n )
+	StartingOrder.create!( heroes_id: next_hero.id, listorder: n ) unless StartingOrder.where( heroes_id: next_hero.id ).first
 	n += 1
 end 
 
@@ -43,6 +43,10 @@ ca_holidays.each do |date, holidayName|
 	Holiday.create!( date: date, holidayName: holidayName ) unless Holiday.where( date: date ).first
 	puts Holiday.name
 end
+
+# Seed one unavailable date for development purposes; delete for production
+Unavailable.create!( date: DateTime.new(2015,6,30), heroes_id: 3 ) unless Unavailable.where( date: DateTime.new(2015,6,30) ).first
+
 
 
 
