@@ -8,6 +8,8 @@ require 'date'
 
 enable :sessions
 
+# Data Model
+
 class Hero < ActiveRecord::Base
 	self.table_name = "heroes"
 	has_many :starting_orders
@@ -41,11 +43,11 @@ class Unavailable < ActiveRecord::Base
 	validates :heroes_id, presence: true
 end
 
-#schedule view
+# Views
+
+# Schedule view
 get '/' do 
-	@heroes = Hero.order('id ASC')
-	@month = CreateSchedule.new.month(2015,6,1)
-	@month_range = CreateSchedule.new.month_range(2015,6,1)
+	@calendar = GenerateCalendar.new.new_calendar
 	erb :index
 end
 
@@ -69,7 +71,7 @@ post '/switch' do
 	redirect "/heroes"
 end
 
-# --------------------------------------------
+# Classes and Methods for Functionality
 
 # Switch two Hero's support days
 class HeroSwitch
@@ -131,6 +133,31 @@ class CreateSchedule
 		end
 	end
 end
+
+class GenerateCalendar
+	def new_calendar(month_range = Month.new.month_range)
+		new_calendar = Hash.new
+		month_range.each do |d|
+			if d.wday == 6
+				new_calendar[d] = ""
+			elsif d.wday == 0
+				new_calendar[d] = ""
+			else
+				if not Calendar.find_by( date: d ).blank?
+					assignment = Calendar.find_by( date: d )
+					hero = Hero.find_by( id: assignment.heroes_id )
+					new_calendar[d] = hero.name
+				end
+				if not Holiday.find_by( date: d ).blank?
+					holiday = Holiday.holidayName
+					new_calendar[d] = holiday
+				end
+			end
+		end
+		return new_calendar
+	end
+end
+
 
 
 # Psuedocode for updating current month schedule:

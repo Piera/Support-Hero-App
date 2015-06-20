@@ -9,19 +9,23 @@
   </tr>
   <tr>
 
-  <% (@month_range).each do |d| %>
-    <% if d.day == 1 %>
-      <% d.wday.times do %> <td class='offset'></td> <% end %>
+  <% @calendar.keys.sort.each do |date| %>
+    <% if date.day == 1 %>
+      <% date.wday.times do %> 
+      <td class='offset'></td> 
+      <% end %>
     <% end %>
 
-    <% if d.wday == 0 %> </tr><tr> <% end %>
-    <td> <%= d.day %> </td>
+    <% if date.wday == 0 %> </tr><tr> 
+    <% end %>
+      <td> 
+        <%= date.day %><br>
+        <%= @calendar[date] %><br> 
+      </td>
   <% end %>
   </tr>
 </table>
 <br>
 
-<% @heroes.each do |hero| %>
-   Hero id: <%= hero.id %>  Hero: <%= hero.name %> <br/>
-<% end %>
+
 

@@ -21,7 +21,7 @@ ca_holidays = { DateTime.new(2015,1,1) => "New Year’s Day",
 				DateTime.new(2015,11,27) => "Day after Thanksgiving",
 				DateTime.new(2015,12,25) => "Christmas Day" }
 
-# Seed Hero Ids		
+# Seed HEROES	
 heroes_list = Array.new
 support_heroes.each do |person|
 	heroes_list.push(person) if not heroes_list.include?(person)
@@ -29,7 +29,7 @@ support_heroes.each do |person|
 end
 puts heroes_list
 
-# Seed Hero Starting Order
+# Seed HERO STARTING ORDER 
 n = 1
 support_heroes.each do |person|
 	next_hero = Hero.find_by name: person
@@ -38,16 +38,16 @@ support_heroes.each do |person|
 	n += 1
 end 
 
-# Seed CA Holidays
+# Seed HOLIDAYS
 ca_holidays.each do |date, holidayName|
 	Holiday.create!( date: date, holidayName: holidayName ) unless Holiday.where( date: date ).first
 	puts Holiday.name
 end
 
-# Seed one unavailable date for development purposes; delete for production
+# Seed ONE UNAVAILABLE DATE for development purposes; delete for production
 Unavailable.create!( date: DateTime.new(2015,6,30), heroes_id: 3 ) unless Unavailable.where( date: DateTime.new(2015,6,30) ).first
 
-# Seed calendar for current month (at this time: June)
+# Seed JUNE CALENDAR for development purposes; won't be needed for production
 CreateSchedule.new.new_month_schedule
 
 
