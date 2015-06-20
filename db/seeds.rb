@@ -47,6 +47,9 @@ end
 # Seed one unavailable date for development purposes; delete for production
 Unavailable.create!( date: DateTime.new(2015,6,30), heroes_id: 3 ) unless Unavailable.where( date: DateTime.new(2015,6,30) ).first
 
+# Seed calendar for current month (at this time: June)
+CreateSchedule.new.new_month_schedule
+
 
 
 
