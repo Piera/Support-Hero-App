@@ -1,3 +1,12 @@
+<style>
+
+td   {padding:50px;
+      margin:50px}
+tr   {padding:50px;
+      margin:50px}
+
+</style>
+
 <p><%= @month %> Support Heros</p>
 
 <table id='calendar'>
@@ -18,7 +27,7 @@
 
     <% if date.wday == 0 %> </tr><tr> 
     <% end %>
-      <td> 
+      <td style = "padding:20px"> 
         <%= date.day %><br>
         <%= @calendar[date] %><br> 
       </td>

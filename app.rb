@@ -51,12 +51,6 @@ get '/' do
 	erb :index
 end
 
-#roster view
-get '/heroes' do
-	@heroes = Hero.order('schedule_date ASC')
-	erb :hero
-end
-
 #hero profile views
 get '/:id' do
  	@hero = Hero.find(params[:id])
@@ -109,23 +103,33 @@ class CreateSchedule
 		n = 1
 		month_range.each do |d|
 			# Check that date is not a weekend and checks that date is not a holiday
-			if d.wday != 6 or d.wday != 0 and Holiday.where( :date => d ).blank? 
+			if d.wday == 6 or d.wday == 0 
+				puts "Weekend!"
+				next
+			elsif Holiday.where( :date => d ).blank? == false
+				puts "Holiday!" 
+				next
+			else
 			# Resets starting order when it reaches end
-				if StartingOrder.find_by( listorder: n ).blank? 
+				puts n
+				if StartingOrder.find_by( id: n ).blank?
 					n = 1
 				end
 				# Finds the next hero based on starting order
-				scheduled_hero = StartingOrder.find_by( listorder: n  )
+				scheduled_hero = StartingOrder.find(n)
 				# Find an available hero:
 				while not Unavailable.find_by( date: d, heroes_id: scheduled_hero.id ).blank?
 					n += 1
 					# Resets starting order when it reaches end of listorder
-					if StartingOrder.find_by( listorder: n ).blank? 
+					if StartingOrder.find_by( id: n ).blank?
 						n = 1
 					end
 					scheduled_hero = StartingOrder.find_by( listorder: n )
 				end
-				# Create calendar entry!
+				# Create calendar entry
+				hero = Hero.find_by( id: scheduled_hero.heroes_id)
+				puts hero.name
+
 				Calendar.create!( heroes_id: scheduled_hero.heroes_id, date: d )
 				# Increment the counter for the hero listorder
 				n += 1
@@ -154,11 +158,10 @@ class GenerateCalendar
 				end
 			end
 		end
+		puts new_calendar
 		return new_calendar
 	end
 end
-
-
 
 # Psuedocode for updating current month schedule:
 # For the current or selected month, starting with the day after the affected date,
