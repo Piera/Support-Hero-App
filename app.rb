@@ -117,19 +117,10 @@ class CreateSchedule
 				end
 				# Finds the next hero based on starting order
 				scheduled_hero = StartingOrder.find_by( listorder: n )
-				puts scheduled_hero.heroes_id
-				puts d
 				# Find an available hero:
 				while Unavailable.where( date: d, heroes_id: scheduled_hero.heroes_id ).exists? == true
-					puts "See it"
-					# Find the next hero; make sure its not the same hero!
+					# Find the next available hero in the starting order
 					n += 1
-					# next_hero = StartingOrder.find_by( listorder: n )
-					# last_hero = StartingOrder.find_by( listorder: (n-1) )
-					# 	while next_hero = last_hero
-					# 		n += 1
-					# 	end
-
 					# Resets starting order when it reaches end of listorder
 					if n == (StartingOrder.all.count + 1)
 						n = 1
@@ -139,6 +130,7 @@ class CreateSchedule
 				# Create calendar entry
 				hero = Hero.find_by( id: scheduled_hero.heroes_id)
 				puts hero.name
+				puts hero.id
 
 				Calendar.create!( heroes_id: scheduled_hero.heroes_id, date: d )
 				# Increment the counter for the hero listorder
