@@ -3,8 +3,8 @@
 </style>
 
 <% @todays_hero.keys.each do |date| %>
-  <h2><%= date.strftime('%B') %> Support Heros</h2>
-  <h3>Today's Support Hero: <%= @todays_hero[date] %> </h3>
+  <h2><center><%= date.strftime('%B') %> Support Heros</center></h2>
+  <h3>Today's Support Hero is <%= @todays_hero[date] %> </h3>
   <br/>
 <% end %>
 
