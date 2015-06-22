@@ -163,8 +163,8 @@ class GenerateCalendar
 					new_calendar[d] = hero.name
 				end
 				if Holiday.where( date: d ).exists? == true
-					holiday = Holiday.holidayName
-					new_calendar[d] = holiday
+					holiday = Holiday.find_by( date: d)
+					new_calendar[d] = holiday.holidayName
 				end
 			end
 		end
