@@ -106,22 +106,22 @@ class CreateSchedule
 			if d.wday == 6 or d.wday == 0 
 				puts "Weekend!"
 				next
-			elsif Holiday.where( :date => d ).blank? == false
+			elsif Holiday.where( date: d ).exists? == true
 				puts "Holiday!" 
 				next
 			else
 			# Resets starting order when it reaches end
 				puts n
-				if StartingOrder.find_by( id: n ).blank?
+				if n == (StartingOrder.all.count + 1)
 					n = 1
 				end
 				# Finds the next hero based on starting order
-				scheduled_hero = StartingOrder.find(n)
+				scheduled_hero = StartingOrder.find_by( listorder: n )
 				# Find an available hero:
-				while not Unavailable.find_by( date: d, heroes_id: scheduled_hero.id ).blank?
+				while Unavailable.where( date: d, heroes_id: scheduled_hero.id ).exists? == true
 					n += 1
 					# Resets starting order when it reaches end of listorder
-					if StartingOrder.find_by( id: n ).blank?
+					if n == (StartingOrder.all.count + 1)
 						n = 1
 					end
 					scheduled_hero = StartingOrder.find_by( listorder: n )
@@ -147,12 +147,12 @@ class GenerateCalendar
 			elsif d.wday == 0
 				new_calendar[d] = ""
 			else
-				if not Calendar.find_by( date: d ).blank?
+				if Calendar.where( date: d ).exists? == true
 					assignment = Calendar.find_by( date: d )
 					hero = Hero.find_by( id: assignment.heroes_id )
 					new_calendar[d] = hero.name
 				end
-				if not Holiday.find_by( date: d ).blank?
+				if Holiday.where( date: d ).exists? == true
 					holiday = Holiday.holidayName
 					new_calendar[d] = holiday
 				end

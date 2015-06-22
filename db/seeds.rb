@@ -37,10 +37,11 @@ puts "--------------------"
 n = 1
 support_heroes.each do |person|
 	next_hero = Hero.find_by name: person
-	StartingOrder.create!( heroes_id: next_hero.id, listorder: n ) unless StartingOrder.where( heroes_id: next_hero.id ).first
+	StartingOrder.create!( heroes_id: next_hero.id, listorder: n ) unless StartingOrder.where( listorder: n ).first
 	puts n
-	puts next_hero.name
-	puts next_hero.id
+	check_hero = StartingOrder.find_by( listorder: n )
+	puts "Starting Order #{check_hero.listorder}"
+	puts "Hero id #{check_hero.heroes_id}"
 	n += 1
 end 
 
@@ -49,7 +50,7 @@ puts "-----HOLIDAYS-------"
 puts "--------------------"
 ca_holidays.each do |date, holidayName|
 	Holiday.create!( date: date, holidayName: holidayName ) unless Holiday.where( date: date ).first
-	holiday = Holiday.find_by( holidayName: holidayName)
+	holiday = Holiday.find_by( holidayName: holidayName )
 	puts holiday.holidayName
 end
 
