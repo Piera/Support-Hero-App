@@ -2,7 +2,11 @@
 
 </style>
 
-<p><%= @month %> Support Heros</p>
+<% @todays_hero.keys.each do |date| %>
+  <h2><%= date.strftime('%B') %> Support Heros</h2>
+  <h3>Today's Support Hero: <%= @todays_hero[date] %> </h3>
+  <br/>
+<% end %>
 
 <table id='calendar'>
  <tr>

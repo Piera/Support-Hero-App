@@ -51,13 +51,14 @@ end
 # Schedule view
 get '/' do 
 	@calendar = GenerateCalendar.new.new_calendar
-	@start_order = DetermineStartingHero.new.check_for_start_order(date = DateTime.new(2015,7,1))
+	@start_order = DetermineStartingHero.new.check_for_start_order
+	@todays_hero = TodaysHero.new.return_hero
 	erb :index
 end
 
 #hero profile views
-get '/:id' do
- 	@hero = Hero.find(params[:id])
+get '/:name' do
+ 	@hero = Hero.find(params[:name])
 	erb :profile
 end
 
@@ -83,16 +84,30 @@ end
 
 # Define Month ranges; a range that is either the full or remainder of month
 # Something glitchy in here to fix...
+
+# Return today's support hero
+class TodaysDate
+	def datetime_object(d = Time.now.utc)
+		year = d.strftime('%Y').to_i
+		month = d.strftime('%m').to_i
+		day = d.strftime('%d').to_i
+		DateTime.new(year, month, day)
+		return DateTime.new(year, month, day)
+	end
+end
+
 class Month
 	def month_start(d = Time.now.utc)
 		year = d.strftime('%Y').to_i
 		month = d.strftime('%m').to_i
 		day = 1.to_i
+		return year, month, day
 	end
 	def remainder_month_start(d = Time.now.utc)
 		year = d.strftime('%Y').to_i
 		month = d.strftime('%m').to_i
 		day = d.strftime('%d').to_i
+		return year, month, day
 	end
 	def month_range(year = 2015, month = 6, day = 1)
 		begin_date = DateTime.new(year, month, day)
@@ -101,10 +116,23 @@ class Month
 	end
 end
 
+class TodaysHero
+	def return_hero(date = TodaysDate.new.datetime_object)
+		hero_date = Calendar.find_by( date: date )
+		puts "Hero #{hero_date}"
+		todays_heroid = hero_date.heroes_id
+		todays_hero = Hero.find_by( id: todays_heroid )
+		todays_hero_name = todays_hero.name
+		todays_hero_data = Hash.new
+		todays_hero_data[date] = todays_hero_name
+		return todays_hero_data
+	end
+end
+
 class DetermineStartingHero
-	def check_for_start_order(date = Time.now.utc)
+	def check_for_start_order(date = TodaysDate.new.datetime_object)
 		if Calendar.where( date: date ).exists? == true
-			calendar_date = Calendar.find_by( date: date)
+			calendar_date = Calendar.find_by( date: date )
 		 	# Check if there is a calendar entry for the day before
 			if Calendar.where( id: (calendar_date.id - 1) ).exists? == true
 				# Find the next previous record that has a starting order entry
