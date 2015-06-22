@@ -57,10 +57,14 @@ end
 # Seed ONE UNAVAILABLE DATE for development purposes; delete for production
 puts "-----UNAVAILABLE----"
 puts "--------------------"
-Unavailable.create!( date: DateTime.new(2015,6,30), heroes_id: 3 ) unless Unavailable.where( date: DateTime.new(2015,6,30) ).first
-unavailable = Unavailable.find_by( date: DateTime.new(2015,6,30) )
-puts unavailable.date
-puts unavailable.heroes_id
+Unavailable.create!( date: DateTime.new(2015,6,30), heroes_id: 3 ) unless Unavailable.where( date: DateTime.new(2015,6,30), heroes_id: 3 ).first
+Unavailable.create!( date: DateTime.new(2015,6,29), heroes_id: 4 ) unless Unavailable.where( date: DateTime.new(2015,6,29), heroes_id: 4 ).first
+unavailable1 = Unavailable.find_by( date: DateTime.new(2015,6,30) )
+puts unavailable1.date
+puts unavailable1.heroes_id
+unavailable2 = Unavailable.find_by( date: DateTime.new(2015,6,29) )
+puts unavailable2.date
+puts unavailable2.heroes_id
 
 # Seed JUNE CALENDAR for development purposes; won't be needed for production
 puts "-----SCHEDULE-------"

@@ -80,19 +80,19 @@ end
 # Define Month ranges; a range that is either the full or remainder of month
 # Something glitchy in here to fix...
 class Month
-	def month_start(d = Time.now)
+	def month_start(d = Time.now.utc)
 		year = d.strftime('%Y').to_i
 		month = d.strftime('%m').to_i
 		day = 1.to_i
 	end
-	def remainder_month_start(d = Time.now)
+	def remainder_month_start(d = Time.now.utc)
 		year = d.strftime('%Y').to_i
 		month = d.strftime('%m').to_i
 		day = d.strftime('%d').to_i
 	end
 	def month_range(year = 2015, month = 6, day = 1)
-		begin_date = Date.new(year, month, day)
-		end_date = Date.new(year, month, -1)
+		begin_date = DateTime.new(year, month, day)
+		end_date = DateTime.new(year, month, -1)
 		month_range = (begin_date .. end_date)
 	end
 end
@@ -117,9 +117,19 @@ class CreateSchedule
 				end
 				# Finds the next hero based on starting order
 				scheduled_hero = StartingOrder.find_by( listorder: n )
+				puts scheduled_hero.heroes_id
+				puts d
 				# Find an available hero:
-				while Unavailable.where( date: d, heroes_id: scheduled_hero.id ).exists? == true
+				while Unavailable.where( date: d, heroes_id: scheduled_hero.heroes_id ).exists? == true
+					puts "See it"
+					# Find the next hero; make sure its not the same hero!
 					n += 1
+					# next_hero = StartingOrder.find_by( listorder: n )
+					# last_hero = StartingOrder.find_by( listorder: (n-1) )
+					# 	while next_hero = last_hero
+					# 		n += 1
+					# 	end
+
 					# Resets starting order when it reaches end of listorder
 					if n == (StartingOrder.all.count + 1)
 						n = 1
