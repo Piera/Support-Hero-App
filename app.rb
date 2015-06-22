@@ -58,29 +58,30 @@ end
 
 #hero profile views
 get '/:name' do
- 	@hero = Hero.find(params[:name])
+	name = params[:name]
+ 	@hero = Hero.find_by( name: name )
 	erb :profile
 end
 
 #switch two hero schedule_dates
-post '/switch' do
-	hero1 = Hero.find(params[:id][0])
-	hero2 = Hero.find(params[:id][1])
-	HeroSwitch.new.date_update(hero1, hero2)
-	redirect "/heroes"
-end
+# post '/switch' do
+# 	hero1 = Hero.find(params[:id][0])
+# 	hero2 = Hero.find(params[:id][1])
+# 	HeroSwitch.new.date_update(hero1, hero2)
+# 	redirect "/heroes"
+# end
 
 # Classes and Methods for Functionality
 
 # Switch two Hero's support days
-class HeroSwitch
-	def date_update(hero1, hero2)
-		date1 = hero1.schedule_date
-		date2 = hero2.schedule_date
-		hero1.update(schedule_date: date2)
-		hero2.update(schedule_date: date1)
-	end
-end
+# class HeroSwitch
+# 	def date_update(hero1, hero2)
+# 		date1 = hero1.schedule_date
+# 		date2 = hero2.schedule_date
+# 		hero1.update(schedule_date: date2)
+# 		hero2.update(schedule_date: date1)
+# 	end
+# end
 
 # Define Month ranges; a range that is either the full or remainder of month
 # Something glitchy in here to fix...

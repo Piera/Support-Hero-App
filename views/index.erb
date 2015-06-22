@@ -28,7 +28,8 @@
     <% end %>
       <td style = "padding:20px"> 
         <%= date.day %><br>
-        <%= @calendar[date] %><br> 
+        
+        <a href="/<%= @calendar[date] %>"><%= @calendar[date] %></a><br> 
       </td>
   <% end %>
   </tr>
