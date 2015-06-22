@@ -16,6 +16,7 @@ ActiveRecord::Schema.define(version: 20150620171543) do
   create_table "calendars", force: :cascade do |t|
     t.datetime "date"
     t.integer  "heroes_id"
+    t.integer  "starting_orders_id"
   end
 
   create_table "heroes", force: :cascade do |t|

@@ -18,6 +18,7 @@ end
 
 class StartingOrder < ActiveRecord::Base
 	belongs_to :heroes
+	belongs_to :calendars
 	validates :listorder, presence: true
 	validates :heroes_id, presence: true
 end
@@ -26,8 +27,10 @@ class Calendar < ActiveRecord::Base
 	has_many :heroes
 	has_many :holidays
 	has_many :unavailables
+	has_many :starting_orders
 	validates :date, presence: true
 	validates :heroes_id, presence: true
+	validates :starting_orders_id, presence: true
 end
 
 class Holiday < ActiveRecord::Base
@@ -90,10 +93,16 @@ class Month
 		month = d.strftime('%m').to_i
 		day = d.strftime('%d').to_i
 	end
-	def month_range(year = 2015, month = 6, day = 1)
+	def month_range(year = 2015, month = 7, day = 1)
 		begin_date = DateTime.new(year, month, day)
 		end_date = DateTime.new(year, month, -1)
 		month_range = (begin_date .. end_date)
+	end
+end
+
+class DetermineStartingHero
+	def check_for_start_order()
+		# if Calendar.where( date: d ).exists? == true
 	end
 end
 
@@ -110,7 +119,7 @@ class CreateSchedule
 				puts "Holiday!" 
 				next
 			else
-			# Resets starting order when it reaches end
+			# Resets starting order when it reaches end of listorder
 				puts n
 				if n == (StartingOrder.all.count + 1)
 					n = 1
@@ -119,7 +128,6 @@ class CreateSchedule
 				scheduled_hero = StartingOrder.find_by( listorder: n )
 				# Find an available hero:
 				while Unavailable.where( date: d, heroes_id: scheduled_hero.heroes_id ).exists? == true
-					# Find the next available hero in the starting order
 					n += 1
 					# Resets starting order when it reaches end of listorder
 					if n == (StartingOrder.all.count + 1)
@@ -131,8 +139,8 @@ class CreateSchedule
 				hero = Hero.find_by( id: scheduled_hero.heroes_id)
 				puts hero.name
 				puts hero.id
-
-				Calendar.create!( heroes_id: scheduled_hero.heroes_id, date: d )
+				puts scheduled_hero.id
+				Calendar.create!( heroes_id: scheduled_hero.heroes_id, date: d, starting_orders_id: scheduled_hero.id)
 				# Increment the counter for the hero listorder
 				n += 1
 			end

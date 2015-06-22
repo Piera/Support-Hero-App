@@ -3,6 +3,7 @@ class CreateCalendar < ActiveRecord::Migration
    create_table :calendars do |t|
 	t.datetime :date
 	t.integer :heroes_id
+	t.integer :starting_orders_id
    end
  end
  
