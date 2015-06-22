@@ -51,6 +51,7 @@ end
 # Schedule view
 get '/' do 
 	@calendar = GenerateCalendar.new.new_calendar
+	@start_order = DetermineStartingHero.new.check_for_start_order(date = DateTime.new(2015,7,1))
 	erb :index
 end
 
@@ -93,7 +94,7 @@ class Month
 		month = d.strftime('%m').to_i
 		day = d.strftime('%d').to_i
 	end
-	def month_range(year = 2015, month = 7, day = 1)
+	def month_range(year = 2015, month = 6, day = 1)
 		begin_date = DateTime.new(year, month, day)
 		end_date = DateTime.new(year, month, -1)
 		month_range = (begin_date .. end_date)
@@ -101,15 +102,29 @@ class Month
 end
 
 class DetermineStartingHero
-	def check_for_start_order()
-		# if Calendar.where( date: d ).exists? == true
+	def check_for_start_order(date = Time.now.utc)
+		if Calendar.where( date: date ).exists? == true
+			calendar_date = Calendar.find_by( date: date)
+		 	# Check if there is a calendar entry for the day before
+			if Calendar.where( id: (calendar_date.id - 1) ).exists? == true
+				# Find the next previous record that has a starting order entry
+				calendar_date = Calendar.find_by( id: (calendar_date.id - 1) )
+				#  The starting order is the next listorder from that date.
+				starting_order = calendar_date.starting_orders_id + 1
+				# puts "Calendar date: #{calendar_date.date}"
+			end
+		else
+			starting_order = 1
+		end
+	puts "start order is #{starting_order}"
+	return starting_order
 	end
 end
 
 class CreateSchedule
 # For the current or selected month:
-	def new_month_schedule(month_range = Month.new.month_range)
-		n = 1
+	def new_month_schedule(month_range = Month.new.month_range, starting_order = 1)
+		n = starting_order
 		month_range.each do |d|
 			# Check that date is not a weekend and checks that date is not a holiday
 			if d.wday == 6 or d.wday == 0 
@@ -173,21 +188,5 @@ class GenerateCalendar
 	end
 end
 
-# Psuedocode for updating current month schedule:
-# For the current or selected month, starting with the day after the affected date,
-# and continuting to end of month: 
-# Iterate through the hero order, and create a record in calendars that:
-#   assigns each hero in order to the days of the month
-# 	Unless the date is a weekend
-# 	Unless the date is a holiday
-# 	Unless the hero is unavailable
 
-# Pseudocode for generating next month schedule:
-# For the next month:
-# Iterate through the hero order, starting with the next hero in order based on last 
-# hero in previous month, and create a record in calendars that:
-#   assigns each hero in order to the days of the month
-# 	Unless the date is a weekend
-# 	Unless the date is a holiday
-# 	Unless the hero is unavailable
 

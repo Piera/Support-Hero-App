@@ -3,3 +3,13 @@ body {
      padding: 75px;
 }
 
+td   {
+	padding:50px;
+    margin:50px;
+}
+
+tr   {
+	padding:50px;
+	margin:50px;
+}
+
