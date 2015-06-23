@@ -13,6 +13,7 @@ enable :sessions
 class Hero < ActiveRecord::Base
 	self.table_name = "heroes"
 	has_many :starting_orders
+	belongs_to :calendars
  	validates :name, presence: true
 end
 
@@ -59,7 +60,8 @@ end
 #hero profile views
 get '/:name' do
 	name = params[:name]
- 	@hero = Hero.find_by( name: name )
+ 	@hero_profile = Hero.find_by( name: name )
+ 	@hero_schedule = HeroSchedule.new.all_dates_for_hero(name)
 	erb :profile
 end
 
@@ -97,6 +99,7 @@ class TodaysDate
 	end
 end
 
+# Generate month ranges for full, or partial months
 class Month
 	def month_start(d = Time.now.utc)
 		year = d.strftime('%Y').to_i
@@ -117,10 +120,20 @@ class Month
 	end
 end
 
+# Return schedule for one Hero
+class HeroSchedule
+	def all_dates_for_hero(name)
+		hero = Hero.find_by( name: name )
+		hero_id = hero.id
+ 		hero_schedule = Calendar.where( heroes_id: hero_id )
+ 		return hero_schedule
+ 	end
+end
+
+#  Generate today's Support Hero
 class TodaysHero
 	def return_hero(date = TodaysDate.new.datetime_object)
 		hero_date = Calendar.find_by( date: date )
-		puts "Hero #{hero_date}"
 		todays_heroid = hero_date.heroes_id
 		todays_hero = Hero.find_by( id: todays_heroid )
 		todays_hero_name = todays_hero.name
@@ -130,6 +143,7 @@ class TodaysHero
 	end
 end
 
+#  Determine the starting order to use when updating schedule
 class DetermineStartingHero
 	def check_for_start_order(date = TodaysDate.new.datetime_object)
 		if Calendar.where( date: date ).exists? == true
@@ -150,6 +164,7 @@ class DetermineStartingHero
 	end
 end
 
+# Create or update the schedule
 class CreateSchedule
 # For the current or selected month:
 	def new_month_schedule(month_range = Month.new.month_range, starting_order = 1)
@@ -192,6 +207,7 @@ class CreateSchedule
 	end
 end
 
+# Generate a calendar for display
 class GenerateCalendar
 	def new_calendar(month_range = Month.new.month_range)
 		new_calendar = Hash.new
