@@ -64,6 +64,7 @@ get '/:name' do
 	@name = params[:name]
  	@hero_profile = Hero.find_by( name: @name )
  	@create_schedule = CreateSchedule.new.new_month_schedule
+ 	@calendar = GenerateCalendar.new.new_calendar
  	@hero_schedule = HeroSchedule.new.all_dates_for_hero(@name)
 	erb :profile
 end
@@ -75,8 +76,11 @@ post '/:name/unavailable' do
 	@name = hero.name
 	@create_schedule = CreateSchedule.new.new_month_schedule
  	@hero_schedule = HeroSchedule.new.all_dates_for_hero(@name)
+ 	@calendar = GenerateCalendar.new.new_calendar
 	redirect "/#{@name}"
 end
+
+
 
 # Define Month ranges; a range that is either the full or remainder of month
 # Something glitchy in here to fix...
@@ -160,8 +164,8 @@ end
 # Create or update the schedule
 class CreateSchedule
 # For the current or selected month:
-	def new_month_schedule(month_range = Month.new.month_range)
-		n = 1
+	def new_month_schedule(month_range = Month.new.month_range, starting_order=1)
+		n = starting_order
 		month_range.each do |d|
 			# Check that date is not a weekend and checks that date is not a holiday
 			if d.wday == 6 or d.wday == 0 

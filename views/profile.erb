@@ -6,8 +6,23 @@
       	<input type='radio' name='date' value='<%= date.date %>'/><%= date.date.strftime('%A, %d %B %Y')  %> <br/>
       </label>
  <% end %>
-
-
+<br/>
 <button type='submit' class='btn btn-primary' name='hero_profile_id' value='<%= @hero_profile.id %>' >Mark Date Unavailable</button>
 </form>
+<br/>
+<br/>
+<h3>To switch dates with another Hero, pick from the available dates below:</h3>
+<form action='/:name/switch' method='post'>
+<select>
+	<% @calendar.keys.sort.each do |date| %>
+        <option value='<%= date %>' />Date: <%= date %> Scheduled Hero:<%= @calendar[date] %></option>
+    <% end %>
+</select>
+<br/>
+<br/>
+<button type='submit' class='btn btn-primary' name='hero_profile_id' value='<%= @hero_profile.id %>' >Switch Dates</button>
+</form>
+
+
+
 
