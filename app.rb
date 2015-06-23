@@ -51,39 +51,32 @@ end
 
 # Schedule view
 get '/' do 
+	@create_schedule = CreateSchedule.new.new_month_schedule
 	@calendar = GenerateCalendar.new.new_calendar
-	@start_order = DetermineStartingHero.new.check_for_start_order
+	# @start_order = DetermineStartingHero.new.check_for_start_order
 	@todays_hero = TodaysHero.new.return_hero
 	erb :index
 end
 
-#hero profile views
+
+# Hero profile view
 get '/:name' do
-	name = params[:name]
- 	@hero_profile = Hero.find_by( name: name )
- 	@hero_schedule = HeroSchedule.new.all_dates_for_hero(name)
+	@name = params[:name]
+ 	@hero_profile = Hero.find_by( name: @name )
+ 	@create_schedule = CreateSchedule.new.new_month_schedule
+ 	@hero_schedule = HeroSchedule.new.all_dates_for_hero(@name)
 	erb :profile
 end
 
-#switch two hero schedule_dates
-# post '/switch' do
-# 	hero1 = Hero.find(params[:id][0])
-# 	hero2 = Hero.find(params[:id][1])
-# 	HeroSwitch.new.date_update(hero1, hero2)
-# 	redirect "/heroes"
-# end
-
-# Classes and Methods for Functionality
-
-# Switch two Hero's support days
-# class HeroSwitch
-# 	def date_update(hero1, hero2)
-# 		date1 = hero1.schedule_date
-# 		date2 = hero2.schedule_date
-# 		hero1.update(schedule_date: date2)
-# 		hero2.update(schedule_date: date1)
-# 	end
-# end
+# Mark Date Unavailable
+post '/:name/unavailable' do
+	Unavailable.create!( date: params[:date], heroes_id: params[:hero_profile_id])
+	hero = Hero.find(params[:hero_profile_id])
+	@name = hero.name
+	@create_schedule = CreateSchedule.new.new_month_schedule
+ 	@hero_schedule = HeroSchedule.new.all_dates_for_hero(@name)
+	redirect "/#{@name}"
+end
 
 # Define Month ranges; a range that is either the full or remainder of month
 # Something glitchy in here to fix...
@@ -167,15 +160,13 @@ end
 # Create or update the schedule
 class CreateSchedule
 # For the current or selected month:
-	def new_month_schedule(month_range = Month.new.month_range, starting_order = 1)
-		n = starting_order
+	def new_month_schedule(month_range = Month.new.month_range)
+		n = 1
 		month_range.each do |d|
 			# Check that date is not a weekend and checks that date is not a holiday
 			if d.wday == 6 or d.wday == 0 
-				puts "Weekend!"
 				next
 			elsif Holiday.where( date: d ).exists? == true
-				puts "Holiday!" 
 				next
 			else
 			# Resets starting order when it reaches end of listorder
@@ -194,12 +185,13 @@ class CreateSchedule
 					end
 					scheduled_hero = StartingOrder.find_by( listorder: n )
 				end
-				# Create calendar entry
-				hero = Hero.find_by( id: scheduled_hero.heroes_id)
-				puts hero.name
-				puts hero.id
-				puts scheduled_hero.id
-				Calendar.create!( heroes_id: scheduled_hero.heroes_id, date: d, starting_orders_id: scheduled_hero.id)
+				# Update or creat calendar entry
+				if Calendar.where( date: d ).exists? == true
+					calendar = Calendar.find_by( date: d)
+					calendar.update( date: d, heroes_id: scheduled_hero.heroes_id, starting_orders_id: scheduled_hero.id )
+				else
+					Calendar.create!( date: d, heroes_id: scheduled_hero.heroes_id, starting_orders_id: scheduled_hero.id )
+				end
 				# Increment the counter for the hero listorder
 				n += 1
 			end

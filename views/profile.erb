@@ -1,11 +1,13 @@
 <h2>Scheduled Dates for <%= @hero_profile.name %></h2>
 
-
+<form action='/:name/unavailable' method='post'>
  <% @hero_schedule.each do |date| %>
-      <label class='checkbox'>
-      	<input type='checkbox' name='date[]' value='<%= date.date %>' /><%= date.date.strftime('%A, %d %B %Y')  %> <br/>
+      <label class='radio'>
+      	<input type='radio' name='date' value='<%= date.date %>'/><%= date.date.strftime('%A, %d %B %Y')  %> <br/>
       </label>
  <% end %>
 
 
-<button type='submit' class='btn btn-primary'>Switch Date</button> &nbsp; &nbsp; <button type='submit' class='btn btn-primary'>Mark Date Unavailable</button>
+<button type='submit' class='btn btn-primary' name='hero_profile_id' value='<%= @hero_profile.id %>' >Mark Date Unavailable</button>
+</form>
+
