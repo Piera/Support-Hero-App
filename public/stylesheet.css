@@ -12,10 +12,10 @@ tr   {
 	border: 1px;
 }
 
-.center-table
-{
-  margin: 0 auto !important;
-  float: none !important;
-}
+.center-block {  
+  display: block;  
+  margin-right: auto;  
+  margin-left: auto;  
+}  
 
 
