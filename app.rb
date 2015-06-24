@@ -1,6 +1,9 @@
 require 'sinatra'
 require 'sinatra/activerecord'
+# For production:
 require './environments'
+# When running locally:
+# require 'environments'
 require 'sinatra/flash'
 require 'sinatra/redirect_with_flash'
 require 'rack/utils'
@@ -8,7 +11,7 @@ require 'date'
 
 enable :sessions
 
-# Data Model
+# ----- Data Model -----
 
 class Hero < ActiveRecord::Base
 	self.table_name = "heroes"
@@ -48,13 +51,12 @@ class Unavailable < ActiveRecord::Base
 	validates :heroes_id, presence: true
 end
 
-# Views
+# ----- Views -----
 
 # Schedule view
 get '/' do 
 	@create_schedule = CreateSchedule.new.new_month_schedule
 	@calendar = GenerateCalendar.new.new_calendar
-	# @start_order = DetermineStartingHero.new.check_for_start_order
 	@todays_hero = TodaysHero.new.return_hero
 	erb :index
 end
@@ -102,6 +104,9 @@ class Switch
 	end
 end
 
+# ----- Functionality -----
+
+# Return datetime object from params[:date] data
 class StringtoDateTime
 	def extract_datetime(d)
 		year = d.split(',')[0].to_i
@@ -123,9 +128,8 @@ class TodaysDate
 	end
 end
 
-# Generate month ranges for full, or partial months
+
 # Define Month ranges; a range that is either the full or remainder of month
-# Something glitchy in here to fix...
 class Month
 	def month_start(d = Time.now.utc)
 		year = d.strftime('%Y').to_i
@@ -170,7 +174,6 @@ class TodaysHero
 end
 
 #  Determine the starting order to use when updating schedule
-#  Fix this to account for new switch_flag
 class DetermineStartingHero
 	def check_for_start_order(date = TodaysDate.new.datetime_object)
 		if Calendar.where( date: date ).exists? == true
