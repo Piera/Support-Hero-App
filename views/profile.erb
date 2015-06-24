@@ -3,7 +3,7 @@
 <form action='/:name/unavailable' method='post'>
  <% @hero_schedule.each do |date| %>
       <label class='radio'>
-      	<input type='radio' name='date' value='<%= date.date %>'/><%= date.date.strftime('%A, %d %B %Y')  %> <br/>
+      	<input type='radio' name='date' value='<%= date.date.strftime('%Y-%m-%d %H:%M:%S') %>'/><%= date.date.strftime('%A, %d %B %Y')  %> <br/>
       </label>
  <% end %>
 <br/>
@@ -11,17 +11,37 @@
 </form>
 <br/>
 <br/>
-<h3>To switch dates with another Hero, pick from the available dates below:</h3>
+<h3>Switch Dates with another Hero:</h3>
+
 <form action='/:name/switch' method='post'>
-<select>
-	<% @calendar.keys.sort.each do |date| %>
-        <option value='<%= date %>' />Date: <%= date %> Scheduled Hero:<%= @calendar[date] %></option>
+<fieldset>
+<h4>Pick from:</h4>
+<select name='date1'>
+	<% @hero_schedule.each do |date1| %>
+        <option value='<%= date1.date.strftime('%Y, %m, %d') %>' />Date: <%= date1.date.strftime('%A, %d %B %Y') %></option>
     <% end %>
 </select>
+
+<br/>
+<h4>Switch dates:</h4>
+
+<select name='date2'>
+	<% @calendar.keys.sort.each do |date2| %>
+        <option value='<%= date2.strftime('%Y, %m, %d') %>' />Date: <%= date2.strftime('%A, %d %B %Y') %>, Scheduled Hero: <%= @calendar[date2] %></option>
+    <% end %>
+
+</select>
+
 <br/>
 <br/>
+</fieldset>
 <button type='submit' class='btn btn-primary' name='hero_profile_id' value='<%= @hero_profile.id %>' >Switch Dates</button>
 </form>
+
+<br/>
+<br/>
+<a href="/">Return to Calendar View</a><br> 
+
 
 
 

@@ -4,12 +4,18 @@ body {
 }
 
 td   {
-	padding:50px;
-    margin:50px;
+	padding: 20px;
+    border: 1px ;
 }
 
 tr   {
-	padding:50px;
-	margin:50px;
+	border: 1px;
 }
+
+.center-table
+{
+  margin: 0 auto !important;
+  float: none !important;
+}
+
 

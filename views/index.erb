@@ -4,12 +4,13 @@
 
 <% @todays_hero.keys.each do |date| %>
   <h2><center><%= date.strftime('%B') %> <%= date.strftime('%Y') %> Support Heroes</center></h2>
-  <h3>Today's Support Hero is <%= @todays_hero[date] %> </h3>
+  <h3 class = 'alert alert-info col-md-12'>Today's Support Hero is <%= @todays_hero[date] %> </class></h3>
   <br/>
 <% end %>
 
-<table id='calendar'>
- <tr>
+<div class = 'table-responsive center-table'>
+<table id='calendar' class='table-bordered'>
+ <tr class='active'>
    <th>Sunday</th> <th>Monday</th>
    <th>Tuesday</th> <th>Wednesday</th>
    <th>Thursday</th> <th>Friday</th>
@@ -20,13 +21,13 @@
   <% @calendar.keys.sort.each do |date| %>
     <% if date.day == 1 %>
       <% date.wday.times do %> 
-      <td class='offset'></td> 
+      <td class='offset col-md-1'></td> 
       <% end %>
     <% end %>
 
     <% if date.wday == 0 %> </tr><tr> 
     <% end %>
-      <td style = "padding:20px"> 
+      <td class='offset col-md-1'> 
         <%= date.day %><br>
         
         <a href="/<%= @calendar[date] %>"><%= @calendar[date] %></a><br> 
@@ -34,7 +35,8 @@
   <% end %>
   </tr>
 </table>
-<br>
+</class>
+
 
 
 

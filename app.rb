@@ -32,6 +32,7 @@ class Calendar < ActiveRecord::Base
 	validates :date, presence: true
 	validates :heroes_id, presence: true
 	validates :starting_orders_id, presence: true
+	validates :switch_flag, presence:true
 end
 
 class Holiday < ActiveRecord::Base
@@ -80,10 +81,36 @@ post '/:name/unavailable' do
 	redirect "/#{@name}"
 end
 
+# Switch Dates with another Hero
+post '/:name/switch' do
+	date1 = StringtoDateTime.new.extract_datetime(params[:date1])
+	date2 = StringtoDateTime.new.extract_datetime(params[:date2])
+	Switch.new.hero_switch(date1, date2)
+ 	hero = Hero.find(params[:hero_profile_id])
+	@name = hero.name
+	redirect "/#{@name}"
+end
 
+class Switch
+	def hero_switch(date1, date2)
+		calendar1 = Calendar.find_by( date: date1 )
+		calendar2 = Calendar.find_by( date: date2 )
+		hero1 = calendar1.heroes_id
+		hero2 = calendar2.heroes_id
+		calendar1.update( date: date1, heroes_id: hero2, switch_flag: 1)
+		calendar2.update( date: date2, heroes_id: hero1, switch_flag: 1)
+	end
+end
 
-# Define Month ranges; a range that is either the full or remainder of month
-# Something glitchy in here to fix...
+class StringtoDateTime
+	def extract_datetime(d)
+		year = d.split(',')[0].to_i
+		month = d.split(',')[1].to_i
+		day = d.split(',')[2].to_i
+		date = DateTime.new(year, month, day)
+		return date
+	end
+end
 
 # Return today's support hero
 class TodaysDate
@@ -97,6 +124,8 @@ class TodaysDate
 end
 
 # Generate month ranges for full, or partial months
+# Define Month ranges; a range that is either the full or remainder of month
+# Something glitchy in here to fix...
 class Month
 	def month_start(d = Time.now.utc)
 		year = d.strftime('%Y').to_i
@@ -141,6 +170,7 @@ class TodaysHero
 end
 
 #  Determine the starting order to use when updating schedule
+#  Fix this to account for new switch_flag
 class DetermineStartingHero
 	def check_for_start_order(date = TodaysDate.new.datetime_object)
 		if Calendar.where( date: date ).exists? == true
@@ -172,6 +202,8 @@ class CreateSchedule
 				next
 			elsif Holiday.where( date: d ).exists? == true
 				next
+			elsif Calendar.where( date: d, switch_flag: 1).exists? == true
+				next
 			else
 			# Resets starting order when it reaches end of listorder
 				puts n
@@ -194,7 +226,7 @@ class CreateSchedule
 					calendar = Calendar.find_by( date: d)
 					calendar.update( date: d, heroes_id: scheduled_hero.heroes_id, starting_orders_id: scheduled_hero.id )
 				else
-					Calendar.create!( date: d, heroes_id: scheduled_hero.heroes_id, starting_orders_id: scheduled_hero.id )
+					Calendar.create!( date: d, heroes_id: scheduled_hero.heroes_id, starting_orders_id: scheduled_hero.id, switch_flag: 0 )
 				end
 				# Increment the counter for the hero listorder
 				n += 1
