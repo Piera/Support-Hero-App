@@ -9,6 +9,7 @@
 <% end %>
 
 <div class = 'center'>
+  <div class="container-fluid">
 <table id='calendar' class='table-bordered'>
  <tr >
    <th> Sunday</th> <th> Monday</th>
@@ -21,13 +22,13 @@
   <% @calendar.keys.sort.each do |date| %>
     <% if date.day == 1 %>
       <% date.wday.times do %> 
-      <td class='offset col-md-2'></td> 
+      <td class='offset col-md-1'></td> 
       <% end %>
     <% end %>
 
     <% if date.wday == 0 %> </tr><tr> 
     <% end %>
-      <td class='offset col-md-2'> 
+      <td class='offset col-md-1'> 
         <%= date.day %><br><br>
         
         <a href="/<%= @calendar[date] %>"><%= @calendar[date] %></a><br> 
@@ -35,6 +36,7 @@
   <% end %>
   </tr>
 </table>
+</div>
 </div>
 
 
